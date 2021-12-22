@@ -28,29 +28,11 @@
 </head>
 
 <body>
-  <textarea id="source">
-
-class: center, middle
-
-# Title
-
----
-
-# Agenda
-
-1. Introduction
-2. Deep-dive
-3. ...
-
----
-
-# Introduction
-
-  </textarea>
   <script src="https://remarkjs.com/downloads/remark-latest.min.js">
   </script>
   <script>
-    var slideshow = remark.create();
+    // var slideshow = remark.create();
+    var slideshow = remark.create({ sourceUrl: './source.md' });
   </script>
 </body>
 
