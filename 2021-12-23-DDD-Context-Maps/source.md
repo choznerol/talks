@@ -70,26 +70,32 @@ class: center, middle
 <img width="30%" src=https://user-images.githubusercontent.com/12410942/146681461-346dae5e-0fdc-45a9-9216-26b80ffbe6d1.jpg />
 
 ---
+# 3. 以 2B 為例的 Context Map
+
+<img width="80%" src="https://user-images.githubusercontent.com/12410942/147099262-df8ce05d-5bc0-4020-8602-9c3f2e05651d.png">
+
+---
 
 name: relationship-list
 
 # 3. 以 2B 為例的 Context Map
 
-- Shared Kernel
-- Separate Way
-- Customer/Supplier Development Team
-- Conformist
-- Anticorruption Layer
-- Open Host Service
-- Published Language
+- 非上下游關係
+  - Shared Kernel
+  - Separate Way
+- 上下游關係
+  - Conformist
+  - Anticorruption Layer
+  - Open Host Service
+  - Published Language
 
 ⚠️ 大量使用 2B/2C 合作案例舉例，請勿走心，大家都很棒，一切都是 trade off，一起繼續努力 ❤️
 
-<img width="40%" src="https://user-images.githubusercontent.com/12410942/147099262-df8ce05d-5bc0-4020-8602-9c3f2e05651d.png">
 
 ---
 
-## 非依賴關係 Shared Kernel v.s. Separate Way
+name: sk-sw
+## Shared Kernel v.s. Separate Way
 
 - 期許有朝一日的 [vod-service](https://github.com/hahow/vod-service)
 - 曾經理想中的 [hh-classroom](https://github.com/hahow/hh-classroom/)
@@ -98,44 +104,50 @@ name: relationship-list
 <img style="width: 40%;" src=https://user-images.githubusercontent.com/559351/65013811-2bae5580-d94f-11e9-995a-136c29f8fd3a.png />
 
 
-其實就是共用與否的權衡，Shared Kernel 的成功需要：
-1. 有意識共用 Ubiquitous Language 並一起維護（or 轉換層的成本多大？）
-2. Continuous Integration（修改不能 break 彼此）
 
 ???
 
 個人認為 classroom 可能比較難 Shared Kernel、VOD 可能比較適合
 ---
 
-##  2C 2B 共用課程 -> Separate Way
+## 非上下游關係 Shared Kernel v.s. Separate Way
+###  2C 2B 共用課程 -> Separate Way
+
+- 語言不同、儲存機制時做不同，難以共用 Domain
+- 需求不同（e.g. 2B 課程改製）
 
 `POST /courses/import` 直接複製一份
 <img width=100% src="https://user-images.githubusercontent.com/12410942/146716322-b37ec41f-2be3-4500-b789-a63998571116.png">
 
-- 語言不同、儲存機制時做不同，難以共用 model
-- 需求不同（e.g. 2B 課程改製）
 
 ???
 
 
+---
+
+template: sk-sw
+
+其實就是共用與否的權衡，Shared Kernel 的成功需要：
+1. 有意識共用 Domain 與 Ubiquitous Language 並一起維護
+2. Continuous Integration（修改不能 break 彼此）
 
 ---
 
-## 依賴關係 Conformist v.s. ACL
+## 上下游關係 Conformist v.s. ACL
 
 2B 2C 合作的 worse case：上游團隊沒有動力優先滿足下游團隊的需求
 <img width="50%" src="https://user-images.githubusercontent.com/12410942/146956198-8fead608-9691-48dc-b061-1fd98880a298.png">
 
 
-情境 1: 上游的設計封裝不良 👉 下游團隊負責維護一個 Anticorruption Layer
+情境 1: 上游的設計封裝不良 👉 下游團隊維護 Anticorruption Layer
 
-情境 2: 上游的設計沒問題，但概念不同 👉 下游團隊負責維護一個 Anticorruption Layer / Translator
+情境 2: 上游的設計沒問題，但概念不同 👉 下游團隊維護 Anticorruption Layer / Translator
 
 情境 3: 上游團隊的設計不錯 👉 下游直接當 Conformist
 
 ---
 
-### 情境 1: 上游的設計封裝不良或太複雜 👉 下游團隊負責維護一個 Anticorruption Layer
+### 情境 1: 上游的設計封裝不良或太複雜 👉 下游團隊維護 Anticorruption Layer
 
 - 把綠界封裝起來
 
@@ -143,10 +155,10 @@ name: relationship-list
 
 ---
 
-### 情境 2: 上游的設計沒問題，但概念不同 👉 下游團隊負責維護一個 Anticorruption Layer / Translator
+### 情境 2: 上游的設計沒問題，但概念不同 👉 下游團隊維護 Anticorruption Layer / Translator
 
 - iOS 有 anti corruption layer 把 API 的 resource 轉換成對 iOS app 最直覺的 domain model
-- hahow-for-business 把 BigQuery 封裝在薄薄的轉換層後面
+- hahow-for-business 把 hh-datajob (BigQuery) 透過 Translator 隔離概念
 <img width="100%" src="https://user-images.githubusercontent.com/12410942/146959004-e183a62d-5209-4a7c-a29e-0f8aa9dd05e3.png">
 
 ---
@@ -166,7 +178,7 @@ Tips: 某個元件的介面很大時可考慮 Conformist，因為該元件的 mo
 看完感覺都是 common sense？ 同感，覺得 Strategic Pattern 都有一點商學院味，但其價值在於：
 1. 提出一套框架與 pattern 名稱，讓討論有所依據
 2. 未來整合時可以有意識的逐一盤點可能的 pattern（相較於依賴經驗的直覺）
-3. 命名 convention 可參考 pattern 名稱（如： `FooBarTranslator`）
+3. 命名 convention 可參考 pattern 名稱（如： `FooTranslator`、`BarAdapter`）
 4. 其他？
 
 ---
