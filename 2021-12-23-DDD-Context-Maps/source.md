@@ -14,6 +14,7 @@ class: center, middle
 3. 以 2B 為例的 Context Map
 4. 分組討論: 一起來畫 Context Map 吧
 5. Q & A
+6. 提早結束（？）
 
 ---
 
@@ -46,6 +47,8 @@ class: center, middle
 - Domain: 對應一套 Ubiquitous Language
 - Bounded Context: 軟體邊界，理想上與 Domain 一一對應
 
+如其書名，很實作
+
 ---
 
 # Chapter Overview (bonus)
@@ -55,6 +58,8 @@ class: center, middle
 繼續介紹「系統面」的整合方式，挑了 RESTful API 跟 Message Queue 這兩種方式介紹（的樣子）
 
 ???
+
+如其書名，很實作
 
 因為我也沒看
 
@@ -73,6 +78,10 @@ class: center, middle
 # 3. 以 2B 為例的 Context Map
 
 <img width="80%" src="https://user-images.githubusercontent.com/12410942/147099262-df8ce05d-5bc0-4020-8602-9c3f2e05651d.png">
+
+???
+
+最後可以畫出類似這樣的東西
 
 ---
 
@@ -195,7 +204,7 @@ Tips: 某個元件的介面很大時可考慮 Conformist，因為該元件的 mo
 https://jamboard.google.com/d/1AwNcIy0ouOboNQhYk8pLWpTJ8P1-R2dadEYf1hxLyDI/edit?usp=sharing
 
 參考步驟：
-1. 先用不同的線圈出 Subdomain（大家多討論）跟 Bounded Context（可能就是所有的 services）
+1. 先用不同的顏色圈出 Bounded Context（可能就是所有的 services）跟 Subdomain（大家多討論）
 2. 把 Bounded Context 之間的依賴關係拉出箭頭
 3. 想想兩者個關係比較像[前述](#relationship-list)哪一種呢？標在箭頭上吧
 
