@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Multitenancy</title>
+
+    <link rel="stylesheet" href="../vendor/reveal.js-master/dist/reveal.css">
+    <link rel="stylesheet" href="../vendor/reveal.js-master/dist/theme/white.css" id="theme">
+    <link rel="stylesheet" href="../vendor/reveal.js-master/plugin/highlight/monokai.css">
+</head>
+
+<body>
+
+    <div class="reveal">
+
+        <div class="slides">
+
+            <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
+            <section data-markdown="source.md" data-separator="^\r?\n---\r?\n---\r?\n$"
+                data-separator-vertical="^\r?\n---\r?\n$">
+            </section>
+
+        </div>
+    </div>
+
+    <script src="../vendor/reveal.js-master/dist/reveal.js"></script>
+    <script src="../vendor/reveal.js-master/plugin/markdown/markdown.js"></script>
+    <script src="../vendor/reveal.js-master/plugin/highlight/highlight.js"></script>
+    <script src="../vendor/reveal.js-master/plugin/notes/notes.js"></script>
+    <script src="../vendor/reveal.js-master/plugin/math/math.js"></script>
+
+    <script>
+
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+        });
+
+    </script>
+
+    <style>
+        /* Two columns */
+        /* https://github.com/webpro/reveal-md/issues/223#issuecomment-527424283 */
+        .left {
+            margin: 10px 0 15px 20px;
+            text-align: left;
+            float: left;
+            z-index: -10;
+            width: 48%;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .left-more {
+            width: 64%;
+        }
+
+        .right {
+            margin: 10px 0 15px 0;
+            float: right;
+            text-align: left;
+            z-index: -10;
+            width: 48%;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .right-less {
+            width: 31%;
+        }
+    </style>
+
+</body>
+
+</html>
