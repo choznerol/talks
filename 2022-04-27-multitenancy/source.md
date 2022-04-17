@@ -14,14 +14,14 @@
 
 ## Agenda
 
-1. What is multitenancy?
-2. Multitenancy of Hahow for Business
+1. What is multitenancy? <!-- .element: class="fragment" -->
+2. Multitenancy of Hahow for Business <!-- .element: class="fragment" -->
    - Past: 1 DB
    - Present: 1 DB, N schemas
    - (Possible) Future: M DB, N schema
    - Conclusion
-3. Comparison
-4. Q & A
+3. Comparison <!-- .element: class="fragment" -->
+4. Q & A <!-- .element: class="fragment" -->
 
 <small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
 
@@ -78,10 +78,10 @@ An `Organization` is a tenant
 `Enrollment` belongs to `Course` and `User`
 <!-- .element: class="fragment" -->
 
-Public data accross tenants: `Course`
+Private tenant data: `Enrollment`
 <!-- .element: class="fragment" -->
 
-Private tenant data: `Enrollment`
+Public data accross tenants: `Course`
 <!-- .element: class="fragment" -->
 
 ---
@@ -100,11 +100,11 @@ Private tenant data: `Enrollment`
 <div>
 
 `users` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | **organization_id** | name |
-| --- | --- | --- |
-| 42 | 3 | Jack |
-| 43 | 3 | John |
-| 44 | 4 | Jane |
+| id  | **organization_id** |
+| --- | --- |
+| 42 | 3 |
+| 43 | 3 |
+| 44 | 4 |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 `enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
