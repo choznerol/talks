@@ -139,6 +139,18 @@ Enrollment.where(user: User.of_current_organization.activated) # OK
 Enrollment.where(user: User.activated)
 ```
 
+---
+
+
+## Conclusion
+
+|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+| --- | --- | --- | --- |
+| Operation | low | ? | ? |
+| Multitenancy | ✅ | ? | ? |
+| Logical Isolation |  | ? | ? |
+| Physical Isolation |  | ? | ? |
+| Scale out |  | ? | ? |
 
 ---
 ---
@@ -298,11 +310,24 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 </div>
 
 ---
+
+
+## Conclusion
+
+|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+| --- | --- | --- | --- |
+| Operation | low | mid | ? |
+| Multitenancy | ✅ | ✅ | ? |
+| Logical Isolation |  | ✅ | ? |
+| Physical Isolation |  |  | ? |
+| Scale out |  |  | ? |
+
+---
 ---
 
 <small>
 
-## [WIP] (Possible) Future: M DBs, N schemas
+## [WIP] (Possible) Future: M databases, N schemas
 
 *TODO: Make a diagram instead ?* </small>
 
