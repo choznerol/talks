@@ -2,13 +2,12 @@
 ## B2B SaaS Multitenancy
 ### a Hahow for Business case study
 
-<div class="r-fit-text">
-2022/04/27 @ AppWorks School system design study group </div>
+2022/04/27 @ AppWorks School system design study group <!-- .element: class="r-fit-text" -->
 
 <!-- TODO: 2022/?/? @ Hahow -->
 
-<small> Slide: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
-<small> Source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
+<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
+<small> markdown source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
 
 ---
 ---
@@ -24,7 +23,7 @@
 3. Comparison
 4. Q & A
 
-<small> Slide: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
+<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
 
 ---
 ---
@@ -40,9 +39,9 @@
 
 ## Objectives of multitenancy
 
-- Covered in this talk:
+- Covered in this talk: <!-- .element: class="fragment" -->
   - Data isolation: Database, Storage, Cache
-- Beyond this talk:
+- Beyond this talk: <!-- .element: class="fragment" -->
   - Resource isolation: CPU, Memory, Network
   - Horizontal scalability
 
@@ -68,16 +67,22 @@
 ### Application model
 
 An `Organization` is a tenant
+<!-- .element: class="fragment" -->
 
 `Organization` has many `User`s
+<!-- .element: class="fragment" -->
 
 `User` has many `Enrollment`s
+<!-- .element: class="fragment" -->
 
 `Enrollment` belongs to `Course` and `User`
+<!-- .element: class="fragment" -->
 
 Public data accross tenants: `Course`
+<!-- .element: class="fragment" -->
 
 Private tenant data: `Enrollment`
+<!-- .element: class="fragment" -->
 
 ---
 ---
@@ -86,47 +91,52 @@ Private tenant data: `Enrollment`
 
 <div class="left">
 
-- 🌐 Application
+- 🌐 Application <!-- .element: class="fragment" data-fragment-index="1" -->
   - 🛢 Databases
     - 🗂 Tables
 
 </div>
 <div class="right" style="font-size: 50%">
+<div>
 
-`users`
+`users` <!-- .element: class="fragment" data-fragment-index="2" -->
 | id  | **organization_id** | name |
 | --- | --- | --- |
 | 42 | 3 | Jack |
 | 43 | 3 | John |
 | 44 | 4 | Jane |
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
-`enrollments`
+`enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
 | id  | user_id | course_id |
 | --- | --- | --- |
 | 1110 | 42 | 90 |
 | 1111 | 44 | 84 |
 | 1112 | 43 | 101 |
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
+</div>
 </div>
 
 ---
 
-```ruby
+```ruby [1-5|7-8|10-13|15-16]
 # List activated users
 User.where(
   organization_id: current_organization.id,
   activated: true
 ).all # OK
 
-User.where(activated: true) # Bug! Data Leakage
-```
+# Bug! Data Leakage
+User.where(activated: true)
 
-It can become hard to debug soon
+# It can become hard to debug soon ...
 
-```ruby
 # List enrollments of activated users
 Enrollment.where(user: User.of_current_organization.activated) # OK
-Enrollment.where(user: User.activated) # Bug! Data Leakage!
+
+# Bug! Data Leakage!
+Enrollment.where(user: User.activated)
 ```
 
 
@@ -141,81 +151,101 @@ Enrollment.where(user: User.activated) # Bug! Data Leakage!
 
 <div class="left">
 
-- 🌐 Application
+- 🌐 Application <!-- .element: class="fragment" data-fragment-index="1" -->
   - 🛢 Databases
-    -  📂 **[Schemas](https://www.postgresql.org/docs/current/ddl-schemas.html)**
+    -  📂 **Schemas**
        - 🗂 Tables
 
-*<small>PostgreSQL Schema is like "namespace" for tables</small>*
+*<small>[PostgreSQL Schema](https://www.postgresql.org/docs/current/ddl-schemas.html) is like "namespace" for tables</small>* <!-- .element: class="fragment" data-fragment-index="1" -->
 
 </div>
 
 <div class="right" style="font-size: 50%;">
 
-**`public`**`.users`
-| id  | organization_id | ~name~ |
-| --- | --- | --- |
-| 42 | 3 | ~Jack~ |
-| 43 | 3 | ~John~ |
-| 44 | 4 | ~Jane~ |
+`public.users` <!-- .element: class="fragment" data-fragment-index="2" -->
+| id  | organization_id |
+| --- | --- |
+| 42 | 3 |
+| 43 | 3 |
+| 44 | 4 |
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
-**`tenant_3`**`.enrollments`
+`tenant_3.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
 | id  | user_id | course_id |
 | --- | --- | --- |
 | 1110 | 42 | 90 |
 | 1112 | 43 | 101 |
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
-**`tenant_4`**`.enrollments`
+`tenant_4.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
 | id  | user_id | course_id |
 | --- | --- | --- |
 | 1111 | 44 | 84 |
-
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
 </div>
 
 Note:
 - `name` also moved to `tenant_x.user_profiles`
 
+
 ---
 
 We use [apartment](https://github.com/rails-on-services/apartment) for switching tenant per request accroding to subdomain
 
+<div> <!-- .element: class="fragment" -->
+
 "Switching tenant" as a global context
 ```ruby
-# GET https://cathaybank.business.hahow.in/foo/bar
-Tenant.switch!(Organization.of_subdomain(request.subdomain)) do # In middleware
+# GET https://foo-inc.business.hahow.in/bar
+
+# In middleware
+Tenant.switch!(Organization.of_subdomain(request.subdomain)) do
 
   render User.where(activated: true).page(1) # => [User42, User43]
 
 end
 ```
 
+</div>
+
+<div> <!-- .element: class="fragment" -->
+
 Bug! but no data leakage.
 ```ruby
 # Forget to switch tenant (e.g. in async job)
-
 render User.where(activated: true).page(1) # => []
 ```
+
+</div>
 
 ---
 
 ### Data isolation (2/4) - Storage
 
-1. ✅ **S3 path prefix**
+<div>  <!-- .element: class="fragment" -->
+
+1. **S3 Buckets**
+- max 100 buckets by default
+- max 1000 buckets upon request ([ref](https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html))
+
+</div></br>
+
+<div>  <!-- .element: class="fragment" -->
+
+2. **S3 path prefix** **✅** <!-- .element: class="fragment" -->
 
 ```
 /tenant_42/uploads/foo/bar/bez.png
 /tenant_43/uploads/f/o/o/b/a/r.mp4
 ```
-<br>
-
-2. **S3 Buckets**
-- max 100 buckets by default
-- max 1000 buckets upon request ([ref](https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html))
+</div>
 
 ---
 
 ### Data isolation (3/4) - Cache
+
+<div> <!-- .element: class="fragment" -->
 
 Redis key prefix
 
@@ -225,20 +255,22 @@ learning_leader_board:tenant_43  ->  [1,2,3]
 platform:hot_search_keywords     ->  ['Foo','Bar']
 ```
 
+</div>
+
 ---
 
 ### Data isolation (4/4) - Search Engine
 
 | | |
 | --- | --- |
-| Algolia | required `filters` for each API key |
-| PostgreSQL Full Text Search | Postgres Schema |
-| ElasticSearch | Custom routing + per-tenant sharding|
+| Algolia✅ | <div>required `filters` for each API key</div><!-- .element: class="fragment" data-fragment-index="1" --> |
+| PostgreSQL Full Text Search | Postgres Schema <!-- .element: class="fragment" data-fragment-index="2" --> |
+| ElasticSearch | shards per-tenant + custom routing + required routing <!-- .element: class="fragment" data-fragment-index="3" --> |
 
 
 <small>
 
- [ElasticSearch Multitenancy With Routing - Bozho's tech blog](https://paper.dropbox.com/ep/redirect/external-link?url=https%3A%2F%2Ftechblog.bozho.net%2Felasticsearch-multitenancy-with-routing%2F&hmac=mQNx1UZSgL%2BLcespdpwLVjBAlYImB%2BV9zNiyDnDE1%2BA%3D)
+ [ElasticSearch Multitenancy With Routing - Bozho's tech blog](https://techblog.bozho.net/elasticsearch-multitenancy-with-routing/) <!-- .element: class="fragment" data-fragment-index="3" -->
 </small>
 
 ---
@@ -247,22 +279,21 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 <div class="right" style="font-size:60%">
 
-- POST /free_trial
-- custom check
-- Invitation email
-- Provision
+- POST /free_trial <!-- .element: class="fragment" data-fragment-index="1" -->
+- Invitation email <!-- .element: class="fragment" data-fragment-index="2" -->
+- Provision: <!-- .element: class="fragment" data-fragment-index="3" -->
   - New Postgres schema
-  - free trial order
-  - root user
+  - New `Organization`
+  - A root `User`
 
-![provisioning](https://user-images.githubusercontent.com/12410942/163664795-942147ef-da04-4f2b-81d5-e3d1d34d63c1.png)
+![provisioning](https://user-images.githubusercontent.com/12410942/163664795-942147ef-da04-4f2b-81d5-e3d1d34d63c1.png) <!-- .element: class="fragment" data-fragment-index="3" -->
 
 </div>
 <div class="left">
 
-![request demo form](https://user-images.githubusercontent.com/12410942/163664694-0e4286ee-e01f-45df-8512-2dc74ce01049.png)
+![request demo form](https://user-images.githubusercontent.com/12410942/163664694-0e4286ee-e01f-45df-8512-2dc74ce01049.png) <!-- .element: class="fragment" data-fragment-index="1" -->
 
-![invitation email](https://user-images.githubusercontent.com/12410942/163664769-be5a1fc9-bb1a-48a5-8e35-0575e9a373e3.png)
+![invitation email](https://user-images.githubusercontent.com/12410942/163664769-be5a1fc9-bb1a-48a5-8e35-0575e9a373e3.png) <!-- .element: class="fragment" data-fragment-index="2" -->
 
 </div>
 
@@ -271,7 +302,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 <small>
 
-## (Possible) Future: M DBs, N schemas
+## [WIP] (Possible) Future: M DBs, N schemas
 
 *TODO: Make a diagram instead ?* </small>
 
@@ -351,7 +382,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 - Shopify: multiple databases, **multiple datacenters**
 
    <br>
-- GitLab: [1 database](https://docs.gitlab.com/ee/development/scalability.html#multi-tenancy), not really a multitenancy app?
+<!-- - GitLab: [1 database](https://docs.gitlab.com/ee/development/scalability.html#multi-tenancy), not really a multitenancy app? -->
 - 91App: No sure. Perhaps similar?
 - **Please share about your company!**
 
@@ -366,6 +397,9 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 ---
 
 ## Q & A
+
+<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
+<small> markdown source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
 
 Note:
 Multitenancy is a broad topic that I don't understand very much either
