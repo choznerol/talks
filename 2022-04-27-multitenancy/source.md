@@ -2,12 +2,17 @@
 ## B2B SaaS Multitenancy
 ### a Hahow for Business case study
 
-2022/04/27 @ AppWorks School system design study group <!-- .element: class="r-fit-text" -->
+<!-- 2022/04/27 @ AppWorks School system design study group <!-- .element: class="r-fit-text" -->
 
 <!-- TODO: 2022/?/? @ Hahow -->
 
 <small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
 <small> markdown source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
+<br/>
+<br/>
+
+<small> 💡 Navigate with the <kbd>space</kbd> key </small>
+<!-- .element: class="fragment fade-left" -->
 
 ---
 ---
@@ -31,9 +36,11 @@
 ## 1. What is multitenancy?
 
 1 deployment to serve N isolated "tenant"
-![IBM Technology - Multitenancy Explained](https://user-images.githubusercontent.com/12410942/163659804-db9a58a9-cc90-44e7-8794-8fd873760bca.png)
+[![IBM Technology - Multitenancy Explained](https://user-images.githubusercontent.com/12410942/163659804-db9a58a9-cc90-44e7-8794-8fd873760bca.png)][1]
 
-[IBM Technology - Multitenancy Explained](https://youtu.be/60ccSmOxpMw)
+[IBM Technology - Multitenancy Explained][1]
+
+[1]: https://youtu.be/60ccSmOxpMw
 
 ---
 
@@ -100,19 +107,19 @@ Public data accross tenants: `Course`
 <div>
 
 `users` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | **organization_id** |
-| --- | --- |
-| 42 | 3 |
-| 43 | 3 |
-| 44 | 4 |
+| | id  | **organization_id** |
+| --- | --- | --- |
+| | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
+| | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
+| | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 4<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 `enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | user_id | course_id |
-| --- | --- | --- |
-| 1110 | 42 | 90 |
-| 1111 | 44 | 84 |
-| 1112 | 43 | 101 |
+| | id  | user_id | course_id |
+| --- | --- | --- | --- |
+| | 1110<!-- .element: class="fragment highlight-green" data-fragment-index="3" -->  | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" -->  | 90 |
+| | 1111<!-- .element: class="fragment highlight-blue" data-fragment-index="3" -->  | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" -->  | 84 |
+| | 1112<!-- .element: class="fragment highlight-green" data-fragment-index="3" -->  | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" -->  | 101 |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 </div>
@@ -120,7 +127,9 @@ Public data accross tenants: `Course`
 
 ---
 
-```ruby [1-5|7-8|10-13|15-16]
+### Implementation
+
+```ruby [1-5|7-8|10-14|16-17]
 # List activated users
 User.where(
   organization_id: current_organization.id,
@@ -133,11 +142,15 @@ User.where(activated: true)
 # It can become hard to debug soon ...
 
 # List enrollments of activated users
-Enrollment.where(user: User.of_current_organization.activated) # OK
+Enrollment.where(
+  user: User.of_current_organization.activated) # OK
 
 # Bug! Data Leakage!
 Enrollment.where(user: User.activated)
+
 ```
+
+❓How would you solve this<!-- .element: class="fragment" --> **"leakage by default"** <!-- .element: class="fragment" -->
 
 ---
 
@@ -175,24 +188,24 @@ Enrollment.where(user: User.activated)
 <div class="right" style="font-size: 50%;">
 
 `public.users` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | organization_id |
-| --- | --- |
-| 42 | 3 |
-| 43 | 3 |
-| 44 | 4 |
+| | id  | organization_id |
+| --- | --- | --- |
+| | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
+| | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
+| | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 4<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 `tenant_3.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | user_id | course_id |
-| --- | --- | --- |
-| 1110 | 42 | 90 |
-| 1112 | 43 | 101 |
+| | id  | user_id | course_id |
+| --- | --- | --- | --- |
+| | 1110<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 90 |
+| | 1112<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 101 |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 `tenant_4.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
-| id  | user_id | course_id |
-| --- | --- | --- |
-| 1111 | 44 | 84 |
+| | id  | user_id | course_id |
+| --- | --- | --- | --- |
+| | 1111<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 84 |
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 </div>
@@ -208,13 +221,15 @@ We use [apartment](https://github.com/rails-on-services/apartment) for switching
 <div> <!-- .element: class="fragment" -->
 
 "Switching tenant" as a global context
-```ruby
+```ruby [1|3-5,10|7-8]
 # GET https://foo-inc.business.hahow.in/bar
 
-# In middleware
-Tenant.switch!(Organization.of_subdomain(request.subdomain)) do
+# the "Elevator" middleware
+org = Organization.find_by!(subdomain: request.subdomain)
+Tenant.switch!(org.tenant_schema_name) do
 
-  render User.where(activated: true).page(1) # => [User42, User43]
+  render User.where(activated: true)
+             .page(1) # => [User42, User43]
 
 end
 ```
@@ -223,7 +238,7 @@ end
 
 <div> <!-- .element: class="fragment" -->
 
-Bug! but no data leakage.
+Bug! **but no data leakage.**<!-- .element: class="fragment" -->
 ```ruby
 # Forget to switch tenant (e.g. in async job)
 render User.where(activated: true).page(1) # => []
@@ -404,6 +419,10 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 <div class="left left-more">
 
+- Slack:
+  - a `Workspace` is a tenant
+  - Shard DB, MQ, search engining by groups of tenants
+  - [How Slack built shared channels](https://slack.engineering/how-slack-built-shared-channels/): TL;DR a multi-tenancy exception
 - Shopify: multiple databases, **multiple datacenters**
 
    <br>
@@ -417,6 +436,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 [<img width="100%" alt="image" src="https://user-images.githubusercontent.com/12410942/163684797-115dd4df-1261-43ee-a49f-3ad3e8c799e6.png">](https://youtu.be/F-f0-k46WVk)
 
 </div>
+
 
 ---
 ---
