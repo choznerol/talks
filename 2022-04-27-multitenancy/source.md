@@ -342,12 +342,123 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 <small>
 
-## [WIP] (Possible) Future: M databases, N schemas
+## (Possible) Future: M databases, N schemas
+</small>
 
-*TODO: Make a diagram instead ?* </small>
+<div class="flex" style="font-size:30%">
 
-<div class="left left-more" style="font-size:30%">
+  <div class="flex flex-col bg-red-600 rounded-xl m-2">
+    <code class="m-1"> 🌐 CMS service </code>
+    <ul>
+      <li> Extract from Application </li>
+      <li> Cacheable content </li>
+    </ul>
+    <div class="flex flex-col bg-blue-600 rounded-xl m-2">
+      <code class="m-1"> 🛢 cms_databas </code>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 public. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .courses </code>
 
+| id | title |
+| --- | --- |
+| 956349fb-7085-4956-a353-db73ab1c9a0e | 簡報力 |
+| e7c0ef97-1306-4efc-9948-9e12ed0e7972 | 設計思考 |
+- UUID
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="flex flex-col bg-red-600 rounded-xl m-2">
+  <code class="m-1"> 🌐 Application </code>
+
+  <div class="flex">
+    <div class="flex flex-col bg-blue-600 rounded-xl m-2">
+      <code class="m-1"> 🛢 application_database </code>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 public. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .organizations </code>
+
+<span>
+
+| id | tenant_db_identifier |
+| --- | --- |
+| 1 | tenant_db_a |
+| 2 | tenant_db_a |
+| 3 | tenant_db_b_3 |
+| 4 | tenant_db_c |
+| 5 | tenant_db_c |
+| 6 | tenant_db_c |
+- ...
+</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col bg-blue-600 rounded-xl m-2">
+      <code class="m-1"> 🛢 tenant_db_a </code>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_1. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+<span>
+
+| id  | user_id | cms_course_id |
+| --- | --- | --- |
+| 1110 | 42 | 956349fb-7085-4956-a353-db73ab1c9a0e |
+| 1112 | 43 | e7c0ef97-1306-4efc-9948-9e12ed0e7972 |
+- ...
+</span>
+        </div>
+      </div>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_2. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col bg-blue-600 rounded-xl m-2">
+      <code class="m-1"> 🛢 tenant_db_b </code>
+- Database Isolation for Tenant#3
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_3. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col bg-blue-600 rounded-xl m-2">
+      <code class="m-1"> 🛢 tenant_db_c </code>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_4. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+        </div>
+      </div>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_5. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+        </div>
+      </div>
+      <div class="flex flex-col bg-sky-600 rounded-xl m-2">
+        <code class="m-1"> 📂 tenant_6. </code>
+        <div class="flex flex-col bg-teal-600 rounded-xl m-2">
+          <code class="m-1"> 🗂 .enrollments </code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- - [ ] Extract non-tenant data to another database (e.g. CMS service)
+- [ ] Custom logic for selecting & creating `tenant_db` -->
+</div>
+
+---
+
+<!-- </div> --> -->
 - 🌐 CMS service # Cacheable content
   - 🛢`cms_database`
     - 📂`public.`
@@ -359,7 +470,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
   - 🛢`tenant_db_a`
     - 📂`tenant_1.`, 📂`tenant_2.`, 📂`tenant_3.`
       - 🗂`enrollments`, 🗂`enrollments`, 🗂`enrollments`
-  - 🛢`tenant_db_exclusive_tenant_4` # Hard multitenancy for specific customer
+  - 🛢`tenant_db_exclusive_tenant_4` #
     - 📂`tenant_4.`
       - 🗂`enrollments`
   - 🛢`tenant_db_b`
@@ -367,17 +478,10 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
       - 🗂`enrollments`, 🗂`enrollments`, 🗂`enrollments`
   - ...
 
-- [ ] Extract non-tenant data to another database (e.g. CMS service)
-- [ ] Custom logic for selecting & creating `tenant_db`
 
 </div>
-<div class="right right-less" style="font-size:30%;">
 
 **`cms_database/public`**`.courses`
-| id | title |
-| --- | --- |
-| 956349fb-7085-4956-a353-db73ab1c9a0e | Foo |
-| e7c0ef97-1306-4efc-9948-9e12ed0e7972 | Bar |
 
 **`application_database/public`**`.organizations`
 | id  | tenant_db_identifier
