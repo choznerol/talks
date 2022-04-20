@@ -367,7 +367,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 | --- | --- |
 | 956349fb-7085-4956-a353-db73ab1c9a0e | 簡報力 |
 | e7c0ef97-1306-4efc-9948-9e12ed0e7972 | 設計思考 |
-- UUID
+- ...
         </div>
       </div>
     </div>
@@ -524,18 +524,20 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 ## Comparison
 
-<div class="left left-more">
-
 - Slack:
   - a `Workspace` is a tenant
   - Shard DB, MQ, search engining by groups of tenants
-  - [How Slack built shared channels](https://slack.engineering/how-slack-built-shared-channels/): TL;DR a multi-tenancy exception
-- Shopify: multiple databases, **multiple datacenters**
+  - <span> [How Slack built shared channels](https://slack.engineering/how-slack-built-shared-channels/): TL;DR a multi-tenancy exception </span> <!-- .element class="fragment" -->
 
-   <br>
+---
+
+<div class="left left-more">
+
+- Shopify
+  - multiple databases, **multiple datacenters**
+- 91App: No sure. Perhaps similar?<!-- .element class="fragment" -->
 <!-- - GitLab: [1 database](https://docs.gitlab.com/ee/development/scalability.html#multi-tenancy), not really a multitenancy app? -->
-- 91App: No sure. Perhaps similar?
-- **Please share about your company!**
+- Please share about your company!<!-- .element class="fragment" -->
 
 </div>
 <div class="right right-less">
@@ -543,7 +545,6 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 [<img width="100%" alt="image" src="https://user-images.githubusercontent.com/12410942/163684797-115dd4df-1261-43ee-a49f-3ad3e8c799e6.png">](https://youtu.be/F-f0-k46WVk)
 
 </div>
-
 
 ---
 ---
