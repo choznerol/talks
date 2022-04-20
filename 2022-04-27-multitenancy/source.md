@@ -2,12 +2,15 @@
 ## B2B SaaS Multitenancy
 ### a Hahow for Business case study
 
-<!-- 2022/04/27 @ AppWorks School system design study group <!-- .element: class="r-fit-text" -->
+<small>
 
-<!-- TODO: 2022/?/? @ Hahow -->
+- 2022/04/20: Hahow `#dev-sharing`
+- 2022/04/27: AppWorks School - system design study group
 
-<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
-<small> markdown source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
+</small>
+
+
+<small> Slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy / [`source.md`](https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md) </small>
 <br/>
 <br/>
 
@@ -28,7 +31,7 @@
 3. Comparison <!-- .element: class="fragment" -->
 4. Q & A <!-- .element: class="fragment" -->
 
-<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
+<small> Slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy / [`source.md`](https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md) </small>
 
 ---
 ---
@@ -547,8 +550,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 ## Q & A
 
-<small> slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy </small>
-<small> markdown source: https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md </small>
+<small> Slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy / [`source.md`](https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md) </small>
 
 Note:
 Multitenancy is a broad topic that I don't understand very much either
