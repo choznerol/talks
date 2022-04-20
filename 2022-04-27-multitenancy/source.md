@@ -31,6 +31,13 @@
 3. Comparison <!-- .element: class="fragment" -->
 4. Q & A <!-- .element: class="fragment" -->
 
+<small>
+
+- 💡 Feel free to interupt when you have a question <!-- .element: class="fragment" -->
+- 💡 Feel free to interupt when you have something to share <!-- .element: class="fragment" -->
+
+</small>
+
 <small> Slide deck: https://choznerol.github.io/talks/2022-04-27-multitenancy / [`source.md`](https://github.com/choznerol/talks/blob/main/2022-04-27-multitenancy/source.md) </small>
 
 ---
