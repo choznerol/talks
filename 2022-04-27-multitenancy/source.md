@@ -94,6 +94,9 @@ Private tenant data: `Enrollment`
 Public data accross tenants: `Course`
 <!-- .element: class="fragment" -->
 
+❓Questions?
+<!-- .element: class="fragment" -->
+
 ---
 ---
 
@@ -253,15 +256,17 @@ render User.where(activated: true).page(1) # => []
 
 ### Data isolation (2/4) - Storage
 
-<div>  <!-- .element: class="fragment" -->
+<div class="fragment">
 
 1. **S3 Buckets**
+<!-- FIXME: wrong layout ? -->
+
 - max 100 buckets by default
 - max 1000 buckets upon request ([ref](https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html))
 
 </div></br>
 
-<div>  <!-- .element: class="fragment" -->
+<div class="fragment">
 
 2. **S3 path prefix** **✅** <!-- .element: class="fragment" -->
 
@@ -270,6 +275,10 @@ render User.where(activated: true).page(1) # => []
 /tenant_43/uploads/f/o/o/b/a/r.mp4
 ```
 </div>
+
+Notes:
+- caveats:
+  - two tenant key
 
 ---
 
@@ -457,53 +466,6 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 <!-- - [ ] Extract non-tenant data to another database (e.g. CMS service)
 - [ ] Custom logic for selecting & creating `tenant_db` -->
-</div>
-
----
-
-<!-- </div> --> -->
-- 🌐 CMS service # Cacheable content
-  - 🛢`cms_database`
-    - 📂`public.`
-      - 🗂`courses`
-- 🌐 Application
-  - 🛢`application_database`
-    - 📂`public.`
-      - 🗂`organizations(id, tenant_db_identifier)`
-  - 🛢`tenant_db_a`
-    - 📂`tenant_1.`, 📂`tenant_2.`, 📂`tenant_3.`
-      - 🗂`enrollments`, 🗂`enrollments`, 🗂`enrollments`
-  - 🛢`tenant_db_exclusive_tenant_4` #
-    - 📂`tenant_4.`
-      - 🗂`enrollments`
-  - 🛢`tenant_db_b`
-    - 📂`tenant_5.`, 📂`tenant_6.`, 📂`tenant_7.` ...
-      - 🗂`enrollments`, 🗂`enrollments`, 🗂`enrollments`
-  - ...
-
-
-</div>
-
-**`cms_database/public`**`.courses`
-
-**`application_database/public`**`.organizations`
-| id  | tenant_db_identifier
-| --- | --- |
-| 3 | `tenant_db_a` |
-| 4 | `tenant_db_exclusive_tenant_4` |
-| 5 | `tenant_db_b` |
-
-**`tenant_db_a/tenant_3`**`.enrollments`
-| id  | user_id | cms_course_id |
-| --- | --- | --- |
-| 1110 | 42 | 956349fb-7085-4956-a353-db73ab1c9a0e |
-| 1112 | 43 | e7c0ef97-1306-4efc-9948-9e12ed0e7972 |
-
-**`tenant_db_b/tenant_5`**`.enrollments`
-| id  | user_id | cms_course_id |
-| --- | --- | --- |
-| 1111 | 44 | 956349fb-7085-4956-a353-db73ab1c9a0e |
-
 </div>
 
 ---
