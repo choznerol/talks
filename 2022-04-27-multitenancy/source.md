@@ -142,25 +142,26 @@ Public data accross tenants: `Course`
 
 ### Implementation
 
-```ruby [1-5|7-8|10-14|16-17]
-# List activated users
+```ruby [1|3-7|9-10|12-13|15-16|18-19]
+# 💡 Feature#1: List activated Cathay users
+
+# ✅ Correct
 User.where(
   organization_id: current_organization.id,
   activated: true
-).all # OK
+).all
 
-# Bug! Data Leakage
+# ❌ Bug! Data Leakage
 User.where(activated: true)
 
 # It can become hard to debug soon ...
+# 💡 Feature#2: List enrollments of activated Cathay users
 
-# List enrollments of activated users
-Enrollment.where(
-  user: User.of_current_organization.activated) # OK
+# ✅ Correct
+Enrollment.where(user: User.of_current_organization.activated)
 
-# Bug! Data Leakage!
+# ❌ Bug! Data Leakage
 Enrollment.where(user: User.activated)
-
 ```
 
 ❓How would you solve this<!-- .element: class="fragment" --> **"leakage by default"** <!-- .element: class="fragment" -->
@@ -170,7 +171,7 @@ Enrollment.where(user: User.activated)
 
 ## Conclusion
 
-|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+|  | <small>Past:<br>1DB</small> | <small>Present:<br>1DB, N-schemas</small> | <small>Future:<br>N-DB, M-schemas |
 | --- | --- | --- | --- |
 | Operation | low | ? | ? |
 | Multitenancy | ✅ | ? | ? |
@@ -194,36 +195,51 @@ Enrollment.where(user: User.activated)
     -  📂 **Schemas**
        - 🗂 Tables
 
-*<small>[PostgreSQL Schema](https://www.postgresql.org/docs/current/ddl-schemas.html) is like "namespace" for tables</small>* <!-- .element: class="fragment" data-fragment-index="1" -->
+<small class="fragment" data-fragment-index="1">
+
+- [PostgreSQL Schema](https://www.postgresql.org/docs/current/ddl-schemas.html) is like "namespace" for tables
+- `database.schema.table` <!-- .element: class="fragment" data-fragment-index="2" -->
+  - e.g.<!-- .element: class="fragment" data-fragment-index="2" --> `hfb_prod.tenant_cathay.enrollments`<!-- .element: class="fragment" data-fragment-index="2" -->
+- `SET search_path TO tenant_cathay;` <!-- .element: class="fragment" data-fragment-index="3" -->
+- `SHOW search_path; 👉 "$user", public` <!-- .element: class="fragment" data-fragment-index="4" -->
+
+</small>
+
+
 
 </div>
 
 <div class="right" style="font-size: 50%;">
 
-`public.users` <!-- .element: class="fragment" data-fragment-index="2" -->
+`public.users` <!-- .element: class="fragment" data-fragment-index="5" -->
 | | id  | organization_id |
 | --- | --- | --- |
-| | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
-| | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> |
-| | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 4<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> |
-<!-- .element: class="fragment" data-fragment-index="2" -->
+| | 42<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> |
+| | 43<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 3<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> |
+| | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="6" --> | 4<!-- .element: class="fragment highlight-blue" data-fragment-index="6" --> |
+<!-- .element: class="fragment" data-fragment-index="5" -->
 
-`tenant_3.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
+`tenant_3.enrollments` <!-- .element: class="fragment" data-fragment-index="5" -->
 | | id  | user_id | course_id |
 | --- | --- | --- | --- |
-| | 1110<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 42<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 90 |
-| | 1112<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 43<!-- .element: class="fragment highlight-green" data-fragment-index="3" --> | 101 |
-<!-- .element: class="fragment" data-fragment-index="2" -->
+| | 1110<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 42<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 90 |
+| | 1112<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 43<!-- .element: class="fragment highlight-green" data-fragment-index="6" --> | 101 |
+<!-- .element: class="fragment" data-fragment-index="5" -->
 
-`tenant_4.enrollments` <!-- .element: class="fragment" data-fragment-index="2" -->
+`tenant_4.enrollments` <!-- .element: class="fragment" data-fragment-index="5" -->
 | | id  | user_id | course_id |
 | --- | --- | --- | --- |
-| | 1111<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="3" --> | 84 |
-<!-- .element: class="fragment" data-fragment-index="2" -->
+| | 1111<!-- .element: class="fragment highlight-blue" data-fragment-index="6" --> | 44<!-- .element: class="fragment highlight-blue" data-fragment-index="6" --> | 84 |
+<!-- .element: class="fragment" data-fragment-index="5" -->
 
 </div>
 
 Note:
+- "Qualify name"
+- Postgres Schema usage:
+  - To allow many users to use one database without interfering with each other.
+  - To organize database objects into logical groups to make them more manageable.
+  - Third-party applications can be put into separate schemas so they do not collide with the names of other objects.
 - `name` also moved to `tenant_x.user_profiles`
 
 
@@ -233,31 +249,39 @@ We use [apartment](https://github.com/rails-on-services/apartment) for switching
 
 <div> <!-- .element: class="fragment" -->
 
-"Switching tenant" as a global context
-```ruby [1|3-5,10|7-8]
-# GET https://foo-inc.business.hahow.in/bar
+<small>
 
-# the "Elevator" middleware
-org = Organization.find_by!(subdomain: request.subdomain)
-Tenant.switch!(org.tenant_schema_name) do
+- "Current Tenant" is a global context
+- the "Elevator" middleware
 
+</small>
+
+```ruby [1|5-6,13|3-7,13-14|8-11]
+# GET https://cathay.business.hahow.in/foo/bar
+
+# 🛢 SHOW search_path; 👉 "$user", public
+
+# 1. the "Elevator" middleware
+Tenant.switch!('cathay') { # 🛢 SET search_path TO tenant_cathay;
+  # 🛢 SHOW search_path; 👉 tenant_cathay
+
+  # 2. application logic
   render User.where(activated: true)
              .page(1) # => [User42, User43]
 
-end
+}
+# 🛢 SHOW search_path; 👉 "$user", public
 ```
 
 </div>
 
-<div> <!-- .element: class="fragment" -->
+---
 
 Bug! **but no data leakage.**<!-- .element: class="fragment" -->
 ```ruby
 # Forget to switch tenant (e.g. in async job)
 render User.where(activated: true).page(1) # => []
 ```
-
-</div>
 
 ---
 
@@ -266,7 +290,8 @@ render User.where(activated: true).page(1) # => []
 <div class="fragment">
 
 1. **S3 Buckets**
-<!-- FIXME: wrong layout ? -->
+
+<br>
 
 - max 100 buckets by default
 - max 1000 buckets upon request ([ref](https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html))
@@ -277,7 +302,7 @@ render User.where(activated: true).page(1) # => []
 
 2. **S3 path prefix** **✅** <!-- .element: class="fragment" -->
 
-```
+```sh
 /tenant_42/uploads/foo/bar/bez.png
 /tenant_43/uploads/f/o/o/b/a/r.mp4
 ```
@@ -295,9 +320,13 @@ Notes:
 
 Redis key prefix
 
-```
+```sh
+# Tenant private data
 learning_leader_board:tenant_42  ->  [1,2,3]
 learning_leader_board:tenant_43  ->  [1,2,3]
+```
+```sh
+# Public data accross tenants
 platform:hot_search_keywords     ->  ['Foo','Bar']
 ```
 
@@ -320,6 +349,9 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 </small>
 
 ---
+
+<!-- Skip this page for now -->
+<!-- .slide: data-visibility="hidden" -->
 
 ### Onboarding
 
@@ -348,7 +380,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 ## Conclusion
 
-|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+|  | <small>Past:<br>1DB</small> | <small>Present:<br>1DB, N-schemas</small> | <small>Future:<br>N-DB, M-schemas |
 | --- | --- | --- | --- |
 | Operation | low | mid | ? |
 | Multitenancy | ✅ | ✅ | ? |
@@ -480,7 +512,7 @@ platform:hot_search_keywords     ->  ['Foo','Bar']
 
 ## Conclusion
 
-|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+|  | <small>Past:<br>1DB</small> | <small>Present:<br>1DB, N-schemas</small> | <small>Future:<br>N-DB, M-schemas |
 | --- | --- | --- | --- |
 | Operation | low | mid | high |
 | Multitenancy | ✅ | ✅ | ✅ |
