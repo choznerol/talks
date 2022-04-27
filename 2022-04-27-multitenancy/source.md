@@ -67,7 +67,8 @@
 
 ## 2. Multitenancy of Hahow for Business
 
-<img width="1537" alt="image" src="https://user-images.githubusercontent.com/12410942/165509051-59ad796e-0fdd-4ed9-a78e-25b0d75fe85b.png">
+<img width="1792" alt="image" src="https://user-images.githubusercontent.com/12410942/165509473-872127d9-00da-4ec4-b508-98c2ed082540.png">
+
 
 
 ---
