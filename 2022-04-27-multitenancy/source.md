@@ -67,11 +67,14 @@
 
 ## 2. Multitenancy of Hahow for Business
 
+<img width="1537" alt="image" src="https://user-images.githubusercontent.com/12410942/165509051-59ad796e-0fdd-4ed9-a78e-25b0d75fe85b.png">
+
+
 ---
 
 ### Conclusion (sneak peek)
 
-|  | 1DB | 1DB<br>N schemas | N DB<br>M schemas |
+|  | <small>Past:<br>1DB</small> | <small>Present:<br>1DB, N-schemas</small> | <small>Future:<br>N-DB, M-schemas |
 | --- | --- | --- | --- |
 | Operation | ? | ? | ? |
 | Multitenancy | ? | ? | ? |
