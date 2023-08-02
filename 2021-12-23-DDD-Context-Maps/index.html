@@ -1,39 +1,49 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-  <title>Title</title>
   <meta charset="utf-8">
-  <style>
-    @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-    @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-    @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-    body {
-      font-family: 'Droid Serif';
-    }
+  <title>Multitenancy</title>
 
-    h1,
-    h2,
-    h3 {
-      font-family: 'Yanone Kaffeesatz';
-      font-weight: normal;
-    }
-
-    .remark-code,
-    .remark-inline-code {
-      font-family: 'Ubuntu Mono';
-    }
-  </style>
+  <link rel="stylesheet" href="../vendor/reveal.js-master/dist/reveal.css">
+  <link rel="stylesheet" href="../vendor/reveal.js-master/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="../vendor/reveal.js-master/plugin/highlight/monokai.css">
 </head>
 
 <body>
-  <script src="https://remarkjs.com/downloads/remark-latest.min.js">
-  </script>
+
+  <div class="reveal">
+
+    <div class="slides">
+
+      <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
+      <section data-markdown="source.md" data-separator="^\r?\n---\r?\n---\r?\n$"
+        data-separator-vertical="^\r?\n---\r?\n$">
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../vendor/reveal.js-master/dist/reveal.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/markdown/markdown.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/highlight/highlight.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/math/math.js"></script>
+
   <script>
-    // var slideshow = remark.create();
-    var slideshow = remark.create({ sourceUrl: './source.md' });
+
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+    });
+
   </script>
+
 </body>
 
 </html>
