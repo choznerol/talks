@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Multitenancy</title>
+
+  <link rel="stylesheet" href="../vendor/reveal.js-master/dist/reveal.css">
+  <link rel="stylesheet" href="../vendor/reveal.js-master/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="../vendor/reveal.js-master/plugin/highlight/monokai.css">
+</head>
+
+<body>
+
+  <div class="reveal">
+
+    <div class="slides">
+
+      <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
+      <section data-markdown="source.md" data-separator="^\r?\n---\r?\n---\r?\n$"
+        data-separator-vertical="^\r?\n---\r?\n$">
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../vendor/reveal.js-master/dist/reveal.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/markdown/markdown.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/highlight/highlight.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="../vendor/reveal.js-master/plugin/math/math.js"></script>
+
+  <script>
+
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+    });
+
+  </script>
+
+</body>
+
+</html>
